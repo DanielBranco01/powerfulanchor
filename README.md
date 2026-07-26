@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Powerful Anchor — Next.js
 
-## Getting Started
+Site institucional da Powerful Anchor, migrado de um HTML/CSS/JS estático para Next.js 15 (App Router), mantendo 1:1 a identidade visual, secções e conteúdos do original.
 
-First, run the development server:
+## Stack
+
+- **Next.js 15** (App Router) + **TypeScript** (strict)
+- **Tailwind CSS v4** — tokens de cor/tipografia/sombra definidos em `app/globals.css` via `@theme`
+- **next/font** — Space Grotesk (display) + Inter (body)
+- **lucide-react** — iconografia
+- **Zod** + **Server Actions** — validação e envio do formulário de contacto
+
+## Como correr
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abrir [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Build de produção:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm build
+pnpm start
+```
 
-## Learn More
+> Nota: se `pnpm` não estiver instalado globalmente, pode usar `npx pnpm install` / `npx pnpm dev`.
 
-To learn more about Next.js, take a look at the following resources:
+## Estrutura
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+app/
+├── layout.tsx        # fontes, metadata, <Nav /> + <Footer />
+├── page.tsx           # composição da homepage
+├── globals.css        # tokens @theme + estilos das secções
+└── actions.ts          # Server Action do formulário de contacto (Zod)
+components/
+├── Nav.tsx             # header fixo, efeito de scroll, menu mobile
+├── Hero.tsx            # hero com node-visual animado
+├── NodeVisual.tsx       # rings/dots/linhas do hero (client)
+├── TrustBar.tsx
+├── About.tsx            # #sobre
+├── Services.tsx         # #servicos
+├── Differentials.tsx    # #diferenciais
+├── Projects.tsx         # #projetos
+├── Process.tsx          # #processo
+├── CtaBand.tsx
+├── Contact.tsx          # #contacto — formulário (client + Server Action)
+├── Footer.tsx
+└── ui/
+    ├── Reveal.tsx        # wrapper IntersectionObserver para animação de scroll
+    └── SectionHead.tsx   # eyebrow + h2 + p reutilizável
+public/
+└── logo.png             # logótipo extraído do favicon/base64 original
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Notas de implementação
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- A paleta de cores e os design tokens (raio, sombras) estão definidos como custom properties Tailwind v4 em `@theme`, disponíveis como utilities (`bg-pink`, `text-ink`, etc.) e reutilizados nos estilos das secções em `globals.css`.
+- O formulário de contacto valida os campos no servidor com Zod via Server Action; ao ser bem-sucedido, o cliente abre o cliente de e-mail (`mailto:`) com o assunto/corpo preenchidos, replicando o comportamento do site original.
+- O ano no rodapé é calculado no servidor com `new Date().getFullYear()`.
+- As animações `float`/`spin` do node-visual do hero e a transição `.reveal` estão definidas em `globals.css`; o cálculo das linhas que ligam os pontos ao centro é feito em `NodeVisual.tsx` (client component), replicando a lógica original baseada em `getBoundingClientRect`.
