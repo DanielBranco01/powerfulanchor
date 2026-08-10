@@ -1,5 +1,8 @@
+import Link from "next/link";
+
 export default function Footer() {
   const year = new Date().getFullYear();
+  const catHref = (cat: string) => `/produtos?cat=${encodeURIComponent(cat)}`;
 
   return (
     <footer>
@@ -62,13 +65,16 @@ export default function Footer() {
             <h5>Produtos</h5>
             <ul>
               <li>
-                <a href="#servicos">Redes de Dados</a>
+                <Link href={catHref("Redes de Dados")}>Redes de Dados</Link>
               </li>
               <li>
-                <a href="#servicos">Áudio e Vídeo</a>
+                <Link href={catHref("Áudio e Vídeo")}>Áudio e Vídeo</Link>
               </li>
               <li>
-                <a href="#servicos">Sistemas de RF</a>
+                <Link href={catHref("Sistemas de RF")}>Sistemas de RF</Link>
+              </li>
+              <li>
+                <Link href="/produtos">Ver catálogo</Link>
               </li>
             </ul>
           </div>

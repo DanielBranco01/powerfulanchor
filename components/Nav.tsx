@@ -1,10 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const LINKS = [
+type NavLink = { href: string; label: string; route?: boolean };
+
+const LINKS: NavLink[] = [
   { href: "#sobre", label: "Empresa" },
   { href: "#servicos", label: "Serviços" },
+  { href: "/produtos", label: "Produtos", route: true },
   { href: "#diferenciais", label: "Porquê nós" },
   { href: "#projetos", label: "Aplicações" },
   { href: "#processo", label: "Processo" },
@@ -25,15 +29,21 @@ export default function Nav() {
   return (
     <header className={`nav${scrolled ? " scrolled" : ""}`} id="nav">
       <div className="wrap nav-inner">
-        <a href="#top" className="logo" aria-label="Powerful Anchor — início">
+        <a href="/#top" className="logo" aria-label="Powerful Anchor — início">
           <span className="brand-logo" role="img" aria-label="Powerful Anchor" />
         </a>
         <nav className={`nav-links${open ? " open" : ""}`} id="navLinks">
-          {LINKS.map((link) => (
-            <a key={link.href} href={link.href} onClick={() => setOpen(false)}>
-              {link.label}
-            </a>
-          ))}
+          {LINKS.map((link) =>
+            link.route ? (
+              <Link key={link.href} href={link.href} onClick={() => setOpen(false)}>
+                {link.label}
+              </Link>
+            ) : (
+              <a key={link.href} href={link.href} onClick={() => setOpen(false)}>
+                {link.label}
+              </a>
+            )
+          )}
         </nav>
         <div className="nav-cta">
           <a href="#contacto" className="btn btn-primary">
