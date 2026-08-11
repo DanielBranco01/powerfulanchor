@@ -216,6 +216,63 @@ header.nav.scrolled {
   padding: 11px 22px;
   font-size: 0.92rem;
 }
+.nav-links a.active {
+  color: var(--color-ink);
+}
+.nav-links a.active::after {
+  width: 100%;
+}
+.nav-basket {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #fff;
+  background: var(--color-pink);
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+.nav-basket:hover {
+  background: var(--color-pink-bright);
+  transform: translateY(-1px);
+}
+.nav-basket svg {
+  width: 18px;
+  height: 18px;
+}
+.nav-basket .badge {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--color-pink);
+  font-size: 0.74rem;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+}
+.nav-basket.empty {
+  background: var(--color-ink);
+}
+.nav-basket.empty .badge {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+@media (max-width: 520px) {
+  .nav-basket-lbl {
+    display: none;
+  }
+}
 .burger {
   display: none;
   flex-direction: column;

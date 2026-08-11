@@ -32,18 +32,18 @@ pnpm start
 
 ```
 app/
-├── layout.tsx              # root: html/body, fontes, metadata base
-├── globals.css             # tokens @theme + estilos das secções do site
+├── layout.tsx              # root: html/body, fontes, <BasketProvider> + <Nav/> + <Footer/>
+├── page.tsx                # homepage (compõe as secções)
+├── globals.css             # tokens @theme + estilos das secções do site + nav
 ├── actions.ts              # Server Action do formulário de contacto (Zod)
 ├── icon.png                # favicon (logótipo)
-├── (site)/                 # grupo de rotas do site institucional
-│   ├── layout.tsx          # <Nav /> + <Footer />
-│   └── page.tsx            # homepage (compõe as secções)
 └── produtos/               # módulo de catálogo
     ├── page.tsx            # rota /produtos (server, metadata) → <CatalogueApp />
     └── produtos.css        # estilos do catálogo, isolados sob .pa-catalogue
 components/
-├── Nav.tsx                 # header fixo, scroll, menu mobile, link /produtos
+├── BasketProvider.tsx      # estado global do cesto (useBasket) — partilhado por Nav e catálogo
+├── Nav.tsx                 # header fixo partilhado: scroll, menu mobile, links do site,
+│                           #   link/estado /produtos e botão de cesto (em /produtos)
 ├── Hero.tsx · NodeVisual.tsx · TrustBar.tsx · About.tsx · Services.tsx
 ├── Differentials.tsx · Projects.tsx · Process.tsx · CtaBand.tsx
 ├── Contact.tsx             # #contacto — formulário (client + Server Action)
@@ -52,9 +52,8 @@ components/
 │   ├── Reveal.tsx          # wrapper IntersectionObserver p/ animação de scroll
 │   └── SectionHead.tsx     # eyebrow + h2 + p reutilizável
 └── produtos/               # componentes do catálogo (todos client)
-    ├── CatalogueApp.tsx    # orquestrador: estado, cesto, deep-links, contexto
-    ├── context.tsx         # CatalogueContext + hook useCatalogue
-    ├── CatalogueHeader.tsx # barra do catálogo (marca, voltar, cesto)
+    ├── CatalogueApp.tsx    # orquestrador: navegação de vistas, deep-links, contexto
+    ├── context.tsx         # CatalogueContext (navegação) + hook useCatalogue
     ├── CategoriesView.tsx  # landing de categorias
     ├── CatalogView.tsx     # grelha + pesquisa + filtros (marca/tipo/stock) + ordenação
     ├── DetailView.tsx      # ficha do produto (specs, relacionados, orçamento)
@@ -81,7 +80,8 @@ public/
 - **Dados**: `lib/catalogue.ts` centraliza categorias e produtos tipados (nome, marca, categoria, subcategoria, referência, stock, especificações, imagem). Substituir por estes dados os do teu Excel/BD; a UI adapta-se automaticamente.
 - **Três vistas** (categorias → catálogo → detalhe) geridas por estado no cliente em `CatalogueApp`, partilhando um único contexto (`useCatalogue`).
 - **Pesquisa, filtros e ordenação**: por marca, categoria, tipo (subcategoria) e disponibilidade; pesquisa por nome/referência/marca; ordenação por nome ou marca.
-- **Cesto de orçamento**: adicionar/remover/ajustar quantidades, persistido em `localStorage`; pedido de orçamento (produto único ou vários) compõe um e-mail para `sales@powerfulanchor.pt` (troca por um backend em produção).
+- **Cabeçalho partilhado**: `/produtos` usa o mesmo `<Nav/>` e `<Footer/>` do site (definidos no layout raiz), pelo que se navega livremente entre catálogo e secções do site. O botão de cesto aparece no cabeçalho quando se está em `/produtos`.
+- **Cesto de orçamento**: estado global em `BasketProvider` (`useBasket`), partilhado entre o cabeçalho e o catálogo; adicionar/remover/ajustar quantidades, persistido em `localStorage`; pedido de orçamento (produto único ou vários) compõe um e-mail para `sales@powerfulanchor.pt` (troca por um backend em produção).
 - **Estilos isolados**: todo o CSS do catálogo vive sob `.pa-catalogue` em `app/produtos/produtos.css`, evitando colisões com os estilos do site.
 - **Deep-links**: `/produtos?cat=<categoria>` abre uma categoria e `/produtos?produto=<id>` abre uma ficha; a barra de navegação, os cartões de serviço e o rodapé do site já ligam para o catálogo.
 - **Imagens**: os produtos com URL de imagem do fabricante mostram a foto real; sem URL (ou em erro de carregamento) mostram um placeholder com o ícone da categoria.

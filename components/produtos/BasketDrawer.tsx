@@ -1,13 +1,13 @@
 "use client";
 
 import { catIcon, getProduct } from "@/lib/catalogue";
-import { useCatalogue } from "./context";
+import { useBasket } from "../BasketProvider";
 import SvgIcon from "./SvgIcon";
 import StockBadge from "./StockBadge";
 
 export default function BasketDrawer() {
   const { items, count, drawerOpen, closeDrawer, setQty, remove, clear, openBasketQuote } =
-    useCatalogue();
+    useBasket();
 
   return (
     <>

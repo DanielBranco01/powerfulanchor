@@ -1,9 +1,9 @@
 "use client";
 
-import { useCatalogue } from "./context";
+import { useBasket } from "../BasketProvider";
 
 export default function Toast() {
-  const { toastMsg, toastShow } = useCatalogue();
+  const { toastMsg, toastShow } = useBasket();
 
   return (
     <div className={`toast${toastShow ? " show" : ""}`}>

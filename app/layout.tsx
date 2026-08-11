@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
+import BasketProvider from "@/components/BasketProvider";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -27,7 +30,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt" className={`${spaceGrotesk.variable} ${inter.variable}`}>
-      <body>{children}</body>
+      <body>
+        <BasketProvider>
+          <Nav />
+          {children}
+          <Footer />
+        </BasketProvider>
+      </body>
     </html>
   );
 }

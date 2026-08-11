@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { getProduct, type Product } from "@/lib/catalogue";
-import { useCatalogue } from "./context";
+import { useBasket } from "../BasketProvider";
 
 const CONTACT_EMAIL = "sales@powerfulanchor.pt";
 
@@ -13,7 +13,7 @@ export default function QuoteForm({
   mode: "single" | "basket";
   product?: Product;
 }) {
-  const { items, clear } = useCatalogue();
+  const { items, clear } = useBasket();
   const [ok, setOk] = useState(false);
   const [invalid, setInvalid] = useState<{ nome: boolean; email: boolean }>({
     nome: false,

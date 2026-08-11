@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { catIcon, type Product } from "@/lib/catalogue";
 import { useCatalogue } from "./context";
+import { useBasket } from "../BasketProvider";
 import SvgIcon from "./SvgIcon";
 import StockBadge from "./StockBadge";
 
@@ -36,7 +37,8 @@ function CardImage({ product }: { product: Product }) {
 }
 
 export default function ProductCard({ product }: { product: Product }) {
-  const { showDetail, add, toast } = useCatalogue();
+  const { showDetail } = useCatalogue();
+  const { add, toast } = useBasket();
 
   return (
     <article className="pcard" onClick={() => showDetail(product.id)}>

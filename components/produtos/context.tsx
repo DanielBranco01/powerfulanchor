@@ -4,8 +4,6 @@ import { createContext, useContext } from "react";
 
 export type CatalogueView = "cats" | "catalog" | "detail";
 
-export type BasketItem = { id: string; qty: number };
-
 export type Filters = {
   brand: string;
   cat: string;
@@ -16,34 +14,14 @@ export type Filters = {
 };
 
 export type CatalogueContextValue = {
-  // navigation
   view: CatalogueView;
   selectedId: string | null;
   showCats: () => void;
   enterCatalog: (cat: string) => void;
   showDetail: (id: string) => void;
   goBack: () => void;
-  // filters (catalog view)
   filters: Filters;
   setFilters: (patch: Partial<Filters>) => void;
-  // basket
-  items: BasketItem[];
-  count: number;
-  add: (id: string) => void;
-  setQty: (id: string, delta: number) => void;
-  remove: (id: string) => void;
-  clear: () => void;
-  // overlays
-  drawerOpen: boolean;
-  openDrawer: () => void;
-  closeDrawer: () => void;
-  modalOpen: boolean;
-  openBasketQuote: () => void;
-  closeModal: () => void;
-  // toast
-  toastMsg: string;
-  toastShow: boolean;
-  toast: (msg: string) => void;
 };
 
 export const CatalogueContext = createContext<CatalogueContextValue | null>(null);

@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { catIcon, getProduct, PRODUCTS } from "@/lib/catalogue";
 import { useCatalogue } from "./context";
+import { useBasket } from "../BasketProvider";
 import SvgIcon from "./SvgIcon";
 import StockBadge from "./StockBadge";
 import ProductCard from "./ProductCard";
@@ -26,7 +27,8 @@ function DetailMedia({ img, cat, name }: { img: string | null; cat: string; name
 }
 
 export default function DetailView() {
-  const { selectedId, showCats, enterCatalog, add, toast } = useCatalogue();
+  const { selectedId, showCats, enterCatalog } = useCatalogue();
+  const { add, toast } = useBasket();
   const quoteRef = useRef<HTMLDivElement>(null);
 
   const p = selectedId ? getProduct(selectedId) : undefined;

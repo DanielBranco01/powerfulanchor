@@ -1,10 +1,10 @@
 "use client";
 
-import { useCatalogue } from "./context";
+import { useBasket } from "../BasketProvider";
 import QuoteForm from "./QuoteForm";
 
 export default function QuoteModal() {
-  const { modalOpen, closeModal, items } = useCatalogue();
+  const { modalOpen, closeModal, items } = useBasket();
 
   return (
     <div

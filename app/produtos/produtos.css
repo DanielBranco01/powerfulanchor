@@ -43,70 +43,12 @@
   padding: 0 24px;
 }
 
-/* ===== Top bar (renamed from header.nav to avoid the site's fixed nav) ===== */
-.pa-catalogue .catbar {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: saturate(160%) blur(14px);
-  -webkit-backdrop-filter: saturate(160%) blur(14px);
-  border-bottom: 1px solid var(--line);
-}
-.pa-catalogue .catbar-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 66px;
-}
-.pa-catalogue .brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.15rem;
-  color: var(--ink);
-  cursor: pointer;
-}
-.pa-catalogue .brand .mark {
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, var(--pink), var(--pink-2));
-  display: grid;
-  place-items: center;
-  color: #fff;
-}
-.pa-catalogue .brand .mark svg {
-  width: 17px;
-  height: 17px;
-}
-.pa-catalogue .brand .brandaccent {
-  color: var(--pink);
-}
-.pa-catalogue .nav-back {
-  font-size: 0.92rem;
-  font-weight: 600;
-  color: var(--slate);
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  transition: color 0.2s ease;
-  cursor: pointer;
-  background: none;
-  border: 0;
-  font-family: inherit;
-}
-.pa-catalogue .nav-back:hover {
-  color: var(--pink);
-}
-
 .pa-catalogue .head {
   background: radial-gradient(900px 460px at 82% -20%, rgba(228, 9, 127, 0.35), transparent 60%),
     linear-gradient(160deg, var(--black), var(--black-2));
   color: #fff;
-  padding: 48px 0 42px;
+  /* extra top padding clears the shared fixed site nav (74px) */
+  padding: 122px 0 42px;
 }
 .pa-catalogue .head .eyebrow {
   display: inline-flex;
@@ -333,7 +275,7 @@
 
 .pa-catalogue .toolbar {
   position: sticky;
-  top: 66px;
+  top: 74px;
   z-index: 40;
   background: var(--bg);
   border-bottom: 1px solid var(--line);
@@ -851,7 +793,7 @@
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  z-index: 130;
   padding: 20px;
 }
 .pa-catalogue .modal-bg.show {
@@ -1070,7 +1012,7 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.25s ease, visibility 0.25s ease;
-  z-index: 80;
+  z-index: 120;
 }
 .pa-catalogue .drawer-bg.show {
   opacity: 1;
@@ -1087,7 +1029,7 @@
   box-shadow: -20px 0 60px -30px rgba(24, 4, 18, 0.5);
   transform: translateX(100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 81;
+  z-index: 121;
   display: flex;
   flex-direction: column;
 }
@@ -1318,7 +1260,7 @@
   font-size: 0.9rem;
   font-weight: 500;
   box-shadow: var(--shadow);
-  z-index: 120;
+  z-index: 140;
   transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
   display: flex;
   align-items: center;
@@ -1336,23 +1278,6 @@
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
-}
-
-.pa-catalogue .catfooter {
-  background: var(--black);
-  color: #b6aab4;
-  padding: 34px 0;
-  font-size: 0.9rem;
-}
-.pa-catalogue .catfooter .wrap {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.pa-catalogue .catfooter b {
-  color: #fff;
-  font-family: var(--font-display);
 }
 
 @media (max-width: 1024px) {
