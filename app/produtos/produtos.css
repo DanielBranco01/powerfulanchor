@@ -658,7 +658,13 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--pink);
-  margin-bottom: 8px;
+  margin-bottom: 4px;
+}
+.pa-catalogue .detail-info .dsubcat {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--slate);
+  margin-bottom: 10px;
 }
 .pa-catalogue .detail-info h1 {
   font-size: clamp(1.6rem, 3vw, 2.2rem);
@@ -705,7 +711,22 @@
 .pa-catalogue .dactions {
   display: flex;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+}
+.pa-catalogue .dactions .btn-primary,
+.pa-catalogue .dactions .btn-ghost {
+  padding: 12px 18px;
+  font-size: 0.92rem;
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .pa-catalogue .dactions {
+    flex-wrap: wrap;
+  }
+  .pa-catalogue .dactions .btn-primary,
+  .pa-catalogue .dactions .btn-ghost {
+    white-space: normal;
+  }
 }
 .pa-catalogue .btn-primary {
   display: inline-flex;

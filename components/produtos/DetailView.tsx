@@ -81,6 +81,7 @@ export default function DetailView() {
             <div className="detail-info">
               <span className="dbrand">{p.brand}</span>
               <div className="dcat">{p.cat}</div>
+              {p.subcat && <div className="dsubcat">{p.subcat}</div>}
               <h1>{p.name}</h1>
               <div className="dref">Referência: {p.ref}</div>
               <div className="dstock">
