@@ -1,20 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { catIcon, type Product } from "@/lib/catalogue";
+import { catIcon, type ProductSummary } from "@/lib/catalogue";
 import { useCatalogue } from "./context";
 import { useBasket } from "../BasketProvider";
 import SvgIcon from "./SvgIcon";
 import StockBadge from "./StockBadge";
 
-function CardImage({ product }: { product: Product }) {
+function CardImage({ product }: { product: ProductSummary }) {
   const [status, setStatus] = useState<"loading" | "loaded" | "error">(
     product.img ? "loading" : "error"
   );
 
   return (
     <div className="imgwrap">
-      <span className="brandtag">{product.brand}</span>
       {status !== "loaded" && (
         <div className="ph">
           <SvgIcon inner={catIcon(product.cat)} strokeWidth={1.5} />
@@ -31,12 +30,11 @@ function CardImage({ product }: { product: Product }) {
           onError={() => setStatus("error")}
         />
       )}
-      {status === "loaded" && <span className="real">imagem real</span>}
     </div>
   );
 }
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({ product }: { product: ProductSummary }) {
   const { showDetail } = useCatalogue();
   const { add, toast } = useBasket();
 
@@ -46,7 +44,9 @@ export default function ProductCard({ product }: { product: Product }) {
       <div className="body">
         <div className="cat">{product.cat}</div>
         <h3>{product.name}</h3>
-        <div className="ref">Ref. {product.ref}</div>
+        <div className="ref">
+          Ref. {product.ref} · {product.brand}
+        </div>
         <div className="cardstock">
           <StockBadge stock={product.stock} />
         </div>

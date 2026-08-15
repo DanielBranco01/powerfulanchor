@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { getProduct, type Product } from "@/lib/catalogue";
+import { getProduct, type ProductSummary } from "@/lib/catalogue";
 import { useBasket } from "../BasketProvider";
 
 const CONTACT_EMAIL = "sales@powerfulanchor.pt";
@@ -11,7 +11,7 @@ export default function QuoteForm({
   product,
 }: {
   mode: "single" | "basket";
-  product?: Product;
+  product?: ProductSummary;
 }) {
   const { items, clear } = useBasket();
   const [ok, setOk] = useState(false);

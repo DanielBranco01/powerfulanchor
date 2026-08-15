@@ -47,66 +47,123 @@ export default function CatalogView() {
             <span className="sep">/</span>
             <span className="cur">{meta ? meta.key : "Todos"}</span>
           </div>
-          <h1>{meta ? meta.key : "Todos os produtos"}</h1>
-          <p>{meta ? meta.desc : "Toda a gama de produtos disponível."}</p>
-          <div className="searchbar">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.3-4.3" />
-            </svg>
-            <input
-              type="text"
-              placeholder="Pesquisar por nome, referência ou marca…"
-              autoComplete="off"
-              value={filters.q}
-              onChange={(e) => setFilters({ q: e.target.value })}
-            />
+          <div className="head-row">
+            <div className="head-text">
+              <h1>{meta ? meta.key : "Todos os produtos"}</h1>
+              <p>{meta ? meta.desc : "Toda a gama de produtos disponível."}</p>
+            </div>
+            <div className="searchbar">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Pesquisar por nome, referência ou marca…"
+                autoComplete="off"
+                value={filters.q}
+                onChange={(e) => setFilters({ q: e.target.value })}
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      <div className="toolbar">
-        <div className="wrap">
-          <div className="toolbar-inner">
-            <div className="filters">
-              <span className="fgroup-label">Marca</span>
-              <button
-                className={`chip${filters.brand === "all" ? " active" : ""}`}
-                onClick={() => setFilters({ brand: "all" })}
-              >
-                Todas
-              </button>
-              {BRANDS.map((b) => (
+      <section className="catalog-body">
+        <div className="wrap catalog-layout">
+          <aside className="sidebar">
+            <div className="sidebar-group">
+              <span className="fgroup-label">Categoria</span>
+              <div className="sidebar-chips">
                 <button
-                  key={b}
-                  className={`chip${filters.brand === b ? " active" : ""}`}
-                  onClick={() => setFilters({ brand: b })}
+                  className={`chip${filters.cat === "all" ? " active" : ""}`}
+                  onClick={() => setFilters({ cat: "all", subcat: "all" })}
                 >
-                  {b}
+                  Todas
                 </button>
-              ))}
+                {CATEGORIES.map((c) => (
+                  <button
+                    key={c.key}
+                    className={`chip${filters.cat === c.key ? " active" : ""}`}
+                    onClick={() => setFilters({ cat: c.key, subcat: "all" })}
+                  >
+                    {c.key}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="toolbar-right">
-              <span className="count">
-                <b>{list.length}</b> produto{list.length === 1 ? "" : "s"}
-              </span>
+
+            {subcats.length > 0 && (
+              <div className="sidebar-group">
+                <span className="fgroup-label">Tipo</span>
+                <div className="sidebar-chips">
+                  <button
+                    className={`chip${filters.subcat === "all" ? " active" : ""}`}
+                    onClick={() => setFilters({ subcat: "all" })}
+                  >
+                    Todas
+                  </button>
+                  {subcats.map((s) => (
+                    <button
+                      key={s}
+                      className={`chip${filters.subcat === s ? " active" : ""}`}
+                      onClick={() => setFilters({ subcat: s })}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="sidebar-group">
+              <span className="fgroup-label">Marca</span>
+              <div className="sidebar-chips">
+                <button
+                  className={`chip${filters.brand === "all" ? " active" : ""}`}
+                  onClick={() => setFilters({ brand: "all" })}
+                >
+                  Todas
+                </button>
+                {BRANDS.map((b) => (
+                  <button
+                    key={b}
+                    className={`chip${filters.brand === b ? " active" : ""}`}
+                    onClick={() => setFilters({ brand: b })}
+                  >
+                    {b}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="sidebar-group">
+              <span className="fgroup-label">Disponibilidade</span>
               <select
                 className="sort"
                 value={filters.stock}
                 onChange={(e) => setFilters({ stock: e.target.value })}
               >
-                <option value="all">Disponibilidade</option>
+                <option value="all">Todas</option>
                 <option value="in">Em stock</option>
                 <option value="low">Stock reduzido</option>
                 <option value="order">Sob encomenda</option>
               </select>
+            </div>
+          </aside>
+
+          <div className="catalog-main">
+            <div className="catalog-toolbar-top">
+              <span className="count">
+                <b>{list.length}</b> produto{list.length === 1 ? "" : "s"}
+              </span>
               <select
                 className="sort"
                 value={filters.sort}
@@ -117,72 +174,28 @@ export default function CatalogView() {
                 <option value="brand">Marca</option>
               </select>
             </div>
-          </div>
 
-          <div className="catrow">
-            <span className="fgroup-label">Categoria</span>
-            <button
-              className={`chip${filters.cat === "all" ? " active" : ""}`}
-              onClick={() => setFilters({ cat: "all", subcat: "all" })}
-            >
-              Todas
-            </button>
-            {CATEGORIES.map((c) => (
-              <button
-                key={c.key}
-                className={`chip${filters.cat === c.key ? " active" : ""}`}
-                onClick={() => setFilters({ cat: c.key, subcat: "all" })}
-              >
-                {c.key}
-              </button>
-            ))}
-          </div>
-
-          {subcats.length > 0 && (
-            <div className="catrow">
-              <span className="fgroup-label">Tipo</span>
-              <button
-                className={`chip${filters.subcat === "all" ? " active" : ""}`}
-                onClick={() => setFilters({ subcat: "all" })}
-              >
-                Todas
-              </button>
-              {subcats.map((s) => (
-                <button
-                  key={s}
-                  className={`chip${filters.subcat === s ? " active" : ""}`}
-                  onClick={() => setFilters({ subcat: s })}
-                >
-                  {s}
-                </button>
-              ))}
+            <div className="grid">
+              {list.length === 0 ? (
+                <div className="empty">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.6}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.3-4.3" />
+                  </svg>
+                  <h3>Sem resultados</h3>
+                  <p>Tente ajustar a pesquisa ou os filtros.</p>
+                </div>
+              ) : (
+                list.map((p) => <ProductCard key={p.id} product={p} />)
+              )}
             </div>
-          )}
-        </div>
-      </div>
-
-      <section className="grid-sec">
-        <div className="wrap">
-          <div className="grid">
-            {list.length === 0 ? (
-              <div className="empty">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={1.6}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.3-4.3" />
-                </svg>
-                <h3>Sem resultados</h3>
-                <p>Tente ajustar a pesquisa ou os filtros.</p>
-              </div>
-            ) : (
-              list.map((p) => <ProductCard key={p.id} product={p} />)
-            )}
           </div>
         </div>
       </section>

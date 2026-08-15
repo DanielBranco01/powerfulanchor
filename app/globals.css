@@ -222,6 +222,137 @@ header.nav.scrolled {
 .nav-links a.active::after {
   width: 100%;
 }
+
+/* ===== Products mega menu ===== */
+.mega-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.mega-panel {
+  position: absolute;
+  top: calc(100% + 22px);
+  left: 0;
+  width: min(660px, 88vw);
+  background: var(--color-white);
+  border-radius: 18px;
+  box-shadow: var(--shadow-brand);
+  border: 1px solid var(--color-line);
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+  z-index: 200;
+}
+.mega-panel.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.mega-panel-inner {
+  display: grid;
+  grid-template-columns: 222px 1fr;
+}
+.mega-cats {
+  padding: 16px 10px;
+  border-right: 1px solid var(--color-line);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.mega-cat-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 11px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--color-ink);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.mega-cat-item::after {
+  display: none;
+}
+.mega-cat-arrow {
+  opacity: 0.45;
+  font-family: var(--font-display);
+}
+.mega-cat-item:hover,
+.mega-cat-item.active {
+  background: var(--color-bg);
+  color: var(--color-pink);
+}
+.mega-subcats {
+  padding: 20px 26px;
+  min-width: 0;
+}
+.mega-subcats-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.mega-subcats-head span {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-ink);
+}
+.mega-subcats-head a {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-pink);
+}
+.mega-subcats-head a::after {
+  display: none;
+}
+.mega-subcats-head a:hover {
+  color: var(--color-pink-bright);
+}
+.mega-subcats-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 26px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.mega-subcats-list a {
+  font-size: 0.9rem;
+  color: var(--color-slate);
+  padding: 4px 0;
+  line-height: 1.4;
+}
+.mega-subcats-list a::after {
+  display: none;
+}
+.mega-subcats-list a:hover {
+  color: var(--color-pink);
+}
+.mega-footer {
+  border-top: 1px solid var(--color-line);
+  padding: 14px 26px;
+  text-align: right;
+}
+.mega-footer a {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+.mega-footer a::after {
+  display: none;
+}
+.mega-footer a:hover {
+  color: var(--color-pink);
+}
+@media (max-width: 900px) {
+  .mega-panel {
+    display: none;
+  }
+}
 .nav-basket {
   position: relative;
   display: inline-flex;

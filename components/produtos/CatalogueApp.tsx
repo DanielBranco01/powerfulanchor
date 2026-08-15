@@ -9,6 +9,7 @@ import {
   type Filters,
 } from "./context";
 import CategoriesView from "./CategoriesView";
+import SubcategoriesView from "./SubcategoriesView";
 import CatalogView from "./CatalogView";
 import DetailView from "./DetailView";
 import BasketDrawer from "./BasketDrawer";
@@ -22,7 +23,9 @@ function replaceUrl(view: CatalogueView, cat?: string, id?: string) {
   if (typeof window === "undefined") return;
   let url = "/produtos";
   if (view === "detail" && id) url = `/produtos?produto=${encodeURIComponent(id)}`;
-  else if (view === "catalog") url = `/produtos?cat=${encodeURIComponent(cat ?? "all")}`;
+  else if (view === "subcats" && cat) url = `/produtos?cat=${encodeURIComponent(cat)}`;
+  else if (view === "catalog")
+    url = `/produtos?cat=${encodeURIComponent(cat ?? "all")}&view=catalog`;
   window.history.replaceState({}, "", url);
 }
 
@@ -40,12 +43,38 @@ export default function CatalogueApp() {
     scrollTop();
   }, []);
 
+  // From the categories landing: a specific category opens its "Tipos" step;
+  // "all" goes straight to the full catalog.
+  const enterCategory = useCallback((cat: string) => {
+    setFiltersState({ ...DEFAULT_FILTERS, cat: cat || "all" });
+    if (!cat || cat === "all") {
+      setView("catalog");
+      replaceUrl("catalog", "all");
+    } else {
+      setView("subcats");
+      replaceUrl("subcats", cat);
+    }
+    scrollTop();
+  }, []);
+
+  // Jumps straight into the catalog for a category, bypassing the "Tipos"
+  // step — used for in-context navigation (e.g. from a product's detail page).
   const enterCatalog = useCallback((cat: string) => {
     setFiltersState({ ...DEFAULT_FILTERS, cat: cat || "all" });
     setView("catalog");
     replaceUrl("catalog", cat || "all");
     scrollTop();
   }, []);
+
+  const enterSubcat = useCallback(
+    (subcat: string) => {
+      setFiltersState((prev) => ({ ...prev, subcat: subcat || "all" }));
+      setView("catalog");
+      replaceUrl("catalog", filters.cat);
+      scrollTop();
+    },
+    [filters.cat]
+  );
 
   const showDetail = useCallback((id: string) => {
     setSelectedId(id);
@@ -57,14 +86,17 @@ export default function CatalogueApp() {
   const goBack = useCallback(() => {
     if (view === "detail") {
       setView("catalog");
-      replaceUrl("catalog");
+      replaceUrl("catalog", filters.cat);
+    } else if (view === "catalog" && filters.cat !== "all") {
+      setView("subcats");
+      replaceUrl("subcats", filters.cat);
     } else {
       setSelectedId(null);
       setView("cats");
       replaceUrl("cats");
     }
     scrollTop();
-  }, [view]);
+  }, [view, filters.cat]);
 
   const setFilters = useCallback((patch: Partial<Filters>) => {
     if (patch.cat !== undefined) replaceUrl("catalog", patch.cat);
@@ -76,12 +108,17 @@ export default function CatalogueApp() {
     const params = new URLSearchParams(window.location.search);
     const produto = params.get("produto");
     const cat = params.get("cat");
+    const sub = params.get("sub");
+    const viewParam = params.get("view");
     if (produto && getProduct(produto)) {
       setSelectedId(produto);
       setView("detail");
-    } else if (cat && (cat === "all" || isCategory(cat))) {
-      setFiltersState({ ...DEFAULT_FILTERS, cat });
+    } else if (cat === "all") {
+      setFiltersState({ ...DEFAULT_FILTERS, cat: "all" });
       setView("catalog");
+    } else if (cat && isCategory(cat)) {
+      setFiltersState({ ...DEFAULT_FILTERS, cat, subcat: sub || "all" });
+      setView(sub || viewParam === "catalog" ? "catalog" : "subcats");
     }
   }, []);
 
@@ -90,19 +127,33 @@ export default function CatalogueApp() {
       view,
       selectedId,
       showCats,
+      enterCategory,
       enterCatalog,
+      enterSubcat,
       showDetail,
       goBack,
       filters,
       setFilters,
     }),
-    [view, selectedId, showCats, enterCatalog, showDetail, goBack, filters, setFilters]
+    [
+      view,
+      selectedId,
+      showCats,
+      enterCategory,
+      enterCatalog,
+      enterSubcat,
+      showDetail,
+      goBack,
+      filters,
+      setFilters,
+    ]
   );
 
   return (
     <CatalogueContext.Provider value={ctx}>
       <div className="pa-catalogue">
         {view === "cats" && <CategoriesView />}
+        {view === "subcats" && <SubcategoriesView />}
         {view === "catalog" && <CatalogView />}
         {view === "detail" && <DetailView />}
 

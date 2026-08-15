@@ -2,7 +2,7 @@
 
 import { createContext, useContext } from "react";
 
-export type CatalogueView = "cats" | "catalog" | "detail";
+export type CatalogueView = "cats" | "subcats" | "catalog" | "detail";
 
 export type Filters = {
   brand: string;
@@ -17,7 +17,9 @@ export type CatalogueContextValue = {
   view: CatalogueView;
   selectedId: string | null;
   showCats: () => void;
+  enterCategory: (cat: string) => void;
   enterCatalog: (cat: string) => void;
+  enterSubcat: (subcat: string) => void;
   showDetail: (id: string) => void;
   goBack: () => void;
   filters: Filters;

@@ -5,7 +5,7 @@ import { useCatalogue } from "./context";
 import SvgIcon from "./SvgIcon";
 
 export default function CategoriesView() {
-  const { enterCatalog } = useCatalogue();
+  const { enterCategory } = useCatalogue();
 
   return (
     <>
@@ -26,7 +26,7 @@ export default function CategoriesView() {
               <div
                 key={c.key}
                 className={`catcard ${c.cls}`}
-                onClick={() => enterCatalog(c.key)}
+                onClick={() => enterCategory(c.key)}
               >
                 <div className="cico">
                   <SvgIcon inner={c.icon} />
@@ -41,7 +41,7 @@ export default function CategoriesView() {
             ))}
           </div>
           <div className="allbtn">
-            <button onClick={() => enterCatalog("all")}>Ver todos os produtos →</button>
+            <button onClick={() => enterCategory("all")}>Ver todos os produtos →</button>
           </div>
         </div>
       </section>

@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { catIcon, getProduct, PRODUCTS } from "@/lib/catalogue";
+import { useEffect, useRef, useState } from "react";
+import { catIcon, getProduct, getProductDetail, PRODUCTS, type Product } from "@/lib/catalogue";
 import { useCatalogue } from "./context";
 import { useBasket } from "../BasketProvider";
 import SvgIcon from "./SvgIcon";
@@ -30,11 +30,26 @@ export default function DetailView() {
   const { selectedId, showCats, enterCatalog } = useCatalogue();
   const { add, toast } = useBasket();
   const quoteRef = useRef<HTMLDivElement>(null);
+  const [full, setFull] = useState<Product | null>(null);
+
+  useEffect(() => {
+    setFull(null);
+    if (!selectedId) return;
+    let cancelled = false;
+    getProductDetail(selectedId).then((detail) => {
+      if (!cancelled) setFull(detail ?? null);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedId]);
 
   const p = selectedId ? getProduct(selectedId) : undefined;
   if (!p) return null;
 
-  const highlights = p.specs.slice(0, 3);
+  const specs = full?.specs ?? [];
+  const specsLoading = !full;
+  const highlights = specs.slice(0, 3);
   const related = PRODUCTS.filter((x) => x.cat === p.cat && x.id !== p.id).slice(0, 4);
 
   const gotoQuote = () => {
@@ -107,12 +122,24 @@ export default function DetailView() {
             </div>
             <table className="spec-table">
               <tbody>
-                {p.specs.map(([k, v]) => (
-                  <tr key={k}>
-                    <td className="k">{k}</td>
-                    <td className="v">{v}</td>
+                {specsLoading ? (
+                  <tr>
+                    <td className="k">A carregar…</td>
+                    <td className="v"></td>
                   </tr>
-                ))}
+                ) : specs.length === 0 ? (
+                  <tr>
+                    <td className="k">Especificações</td>
+                    <td className="v">Sem dados técnicos detalhados para este artigo.</td>
+                  </tr>
+                ) : (
+                  specs.map(([k, v]) => (
+                    <tr key={k}>
+                      <td className="k">{k}</td>
+                      <td className="v">{v}</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

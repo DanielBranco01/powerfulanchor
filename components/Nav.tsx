@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useBasket } from "./BasketProvider";
+import ProductsMegaMenu from "./ProductsMegaMenu";
 
 type NavLink = { href: string; label: string; route?: boolean };
 
@@ -40,6 +41,11 @@ export default function Nav() {
         <nav className={`nav-links${open ? " open" : ""}`} id="navLinks">
           {LINKS.map((link) => {
             const active = link.route && onProdutos;
+            if (link.href === "/produtos") {
+              return (
+                <ProductsMegaMenu key={link.href} active={active} onNavigate={() => setOpen(false)} />
+              );
+            }
             return link.route ? (
               <Link
                 key={link.href}

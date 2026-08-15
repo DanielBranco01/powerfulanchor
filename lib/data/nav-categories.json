@@ -1,0 +1,74 @@
+[
+  {
+    "key": "Redes de Dados",
+    "slug": "tecnica-de-rede",
+    "cls": "c1",
+    "icon": "<rect x=\"2\" y=\"14\" width=\"20\" height=\"8\" rx=\"2\"/><path d=\"M6 18h.01M10 18h.01\"/><path d=\"M8 14V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v8\"/>",
+    "subcats": [
+      "Cablagem de cobre",
+      "Cablagem de fibra ótica",
+      "Componentes de rede ativos",
+      "Testador de cabos"
+    ]
+  },
+  {
+    "key": "Armários e Servidores",
+    "slug": "armarios-de-rede-e-servidor",
+    "cls": "c5",
+    "icon": "<rect x=\"4\" y=\"2\" width=\"16\" height=\"20\" rx=\"1\"/><path d=\"M4 8h16M4 14h16\"/><path d=\"M8 5h.01M8 11h.01M8 17h.01\"/>",
+    "subcats": [
+      "Acessórios de armário",
+      "Armários de carregamento",
+      "Armários de rede - Autónomos",
+      "Armários de rede - Montagem de parede",
+      "Armários de servidor - Autónomos",
+      "Calhas de tomadas (PDU)",
+      "Consolas KVM",
+      "Fonte de alimentação ininterrupta (UPS)",
+      "Soluções de racks de vídeo-áudio"
+    ]
+  },
+  {
+    "key": "Áudio e Vídeo",
+    "slug": "tecnologia-de-meios-av",
+    "cls": "c2",
+    "icon": "<path d=\"M3 8v8M7 5v14M12 3v18M17 6v12M21 9v6\"/>",
+    "subcats": [
+      "AV-Extender",
+      "Conversor AV",
+      "Divisor AV",
+      "Interruptores AV",
+      "Matrizes AV",
+      "Repetidor AV",
+      "Soluções de conferência",
+      "Suportes de monitor e TV"
+    ]
+  },
+  {
+    "key": "Cablagem e Acessórios",
+    "slug": "cabos-e-perifericos",
+    "cls": "c4",
+    "icon": "<path d=\"M4 4v6a4 4 0 0 0 4 4h8a4 4 0 0 1 4 4v2M4 4h4M20 20h-4\"/>",
+    "subcats": [
+      "Acessórios para computador",
+      "Aparelhos USB e acessórios",
+      "Cabo USB",
+      "Cabo solar e acessórios",
+      "Cabos e adaptadores de vídeo-áudio",
+      "Outros cabos e adaptadores",
+      "Soluções de carregamento",
+      "Soluções para local de trabalho",
+      "Suportes de monitor e TV",
+      "Vedação"
+    ]
+  },
+  {
+    "key": "Sistemas de RF",
+    "slug": "sistemas-de-rf",
+    "cls": "c3",
+    "icon": "<circle cx=\"12\" cy=\"12\" r=\"2\"/><path d=\"M4.9 4.9a10 10 0 0 0 0 14.2M19.1 4.9a10 10 0 0 1 0 14.2M7.8 7.8a6 6 0 0 0 0 8.4M16.2 7.8a6 6 0 0 1 0 8.4\"/>",
+    "subcats": [
+      "Cabos coaxiais"
+    ]
+  }
+]
