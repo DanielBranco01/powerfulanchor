@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import CatalogueApp from "@/components/produtos/CatalogueApp";
 
 export const metadata: Metadata = {
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function ProdutosPage() {
-  return <CatalogueApp />;
+  return (
+    <Suspense fallback={null}>
+      <CatalogueApp />
+    </Suspense>
+  );
 }

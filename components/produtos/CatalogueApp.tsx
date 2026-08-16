@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { CATEGORIES, getProduct } from "@/lib/catalogue";
 import {
   CatalogueContext,
@@ -30,6 +31,7 @@ function replaceUrl(view: CatalogueView, cat?: string, id?: string) {
 }
 
 export default function CatalogueApp() {
+  const searchParams = useSearchParams();
   const [view, setView] = useState<CatalogueView>("cats");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filters, setFiltersState] = useState<Filters>(DEFAULT_FILTERS);
@@ -103,13 +105,16 @@ export default function CatalogueApp() {
     setFiltersState((prev) => ({ ...prev, ...patch }));
   }, []);
 
-  // deep link (?produto / ?cat) once on mount — apply state without rewriting history
+  // Sync from the URL — on first mount AND whenever it changes via a real
+  // Next.js navigation (e.g. a <Link> in the nav mega menu), even though the
+  // page itself doesn't remount. Internal navigation (enterCategory, etc.)
+  // updates the URL with raw history.replaceState, which Next's router — and
+  // therefore this hook — doesn't observe, so it doesn't fight this effect.
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const produto = params.get("produto");
-    const cat = params.get("cat");
-    const sub = params.get("sub");
-    const viewParam = params.get("view");
+    const produto = searchParams.get("produto");
+    const cat = searchParams.get("cat");
+    const sub = searchParams.get("sub");
+    const viewParam = searchParams.get("view");
     if (produto && getProduct(produto)) {
       setSelectedId(produto);
       setView("detail");
@@ -119,8 +124,12 @@ export default function CatalogueApp() {
     } else if (cat && isCategory(cat)) {
       setFiltersState({ ...DEFAULT_FILTERS, cat, subcat: sub || "all" });
       setView(sub || viewParam === "catalog" ? "catalog" : "subcats");
+    } else if (!produto && !cat) {
+      setSelectedId(null);
+      setFiltersState(DEFAULT_FILTERS);
+      setView("cats");
     }
-  }, []);
+  }, [searchParams]);
 
   const ctx = useMemo(
     () => ({
