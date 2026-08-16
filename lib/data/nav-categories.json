@@ -68,7 +68,14 @@
     "cls": "c3",
     "icon": "<circle cx=\"12\" cy=\"12\" r=\"2\"/><path d=\"M4.9 4.9a10 10 0 0 0 0 14.2M19.1 4.9a10 10 0 0 1 0 14.2M7.8 7.8a6 6 0 0 0 0 8.4M16.2 7.8a6 6 0 0 1 0 8.4\"/>",
     "subcats": [
-      "Cabos coaxiais"
+      "Cabos",
+      "Conectores/Adaptadores",
+      "Ferragens/Grampos",
+      "Ferramentas",
+      "Guias de Onda",
+      "Impermeabilização",
+      "Jumper (cabo pré-montado)",
+      "Outros (kits de terra, capas, acessórios)"
     ]
   }
 ]

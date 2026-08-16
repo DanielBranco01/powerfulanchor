@@ -82,27 +82,12 @@ CATEGORIES = [
 # Hand-curated products whose brand/specs are real (not the Excel's
 # "(Especificações ilustrativas.)" placeholders) and aren't covered by the
 # Digitus/Fluke price list, so they're kept and merged in alongside it.
+#
+# Note: the RFS/Sistemas de RF entries formerly hard-coded here now come from
+# the full RFS catalogue import — see scripts/import-rfs-products.py, which
+# owns every product whose `cat` is "Sistemas de RF" and must run after this
+# script (it replaces, not merges, that category's products).
 LEGACY_PRODUCTS = [
-    {
-        "id": "lcf12-50j",
-        "name": "Cabo coaxial CELLFLEX 1/2” LCF12-50J",
-        "brand": "RFS",
-        "cat_slug": "sistemas-de-rf",
-        "subcat": "Cabos coaxiais",
-        "ref": "LCF12-50J",
-        "desc": "Cabo coaxial de baixa perda com condutor exterior de cobre corrugado, para feeders de estações base e sistemas de RF exigentes.",
-        "img": "https://www.rfsworld.com/storage/media/3590/RFS-CELLFLEX-LCF12.png",
-        "stock": "order",
-        "specs": [
-            ["Impedância", "50 Ω"],
-            ["Dimensão", "1/2” (baixa perda)"],
-            ["Condutor exterior", "Cobre corrugado"],
-            ["Dielétrico", "Espuma (foam PE)"],
-            ["Gama de frequências", "até ≈ 8.8 GHz"],
-            ["Raio de curvatura mín.", "70 mm (simples)"],
-            ["Aplicação", "Feeder para estações rádio"],
-        ],
-    },
     {
         "id": "rm60",
         "name": "Módulo de vedação Roxtec RM 60",
