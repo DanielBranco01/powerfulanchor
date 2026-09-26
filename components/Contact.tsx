@@ -99,6 +99,14 @@ export default function Contact() {
                   {state.errors.email && <p className="field-error">{state.errors.email}</p>}
                 </div>
               </div>
+              <input
+                name="website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+              />
               <div className="field">
                 <label htmlFor="assunto">Assunto</label>
                 <input id="assunto" name="assunto" type="text" placeholder="Como podemos ajudar?" />
@@ -118,10 +126,12 @@ export default function Contact() {
                 {pending ? "A enviar…" : "Enviar mensagem"} <span className="arrow">→</span>
               </button>
               <p className="form-note">
-                Ao enviar, será aberto o seu cliente de e-mail com a mensagem preenchida.
+                A sua mensagem é enviada diretamente à nossa equipa. Se não for possível, abriremos o seu cliente de e-mail.
               </p>
               <div className={`form-ok${state.success ? " show" : ""}`}>
-                Obrigado! Abrimos o seu e-mail para concluir o envio para sales@powerfulanchor.pt.
+                {state.saved
+                  ? "Obrigado! Recebemos a sua mensagem e entraremos em contacto brevemente."
+                  : "Obrigado! Abrimos o seu e-mail para concluir o envio para sales@powerfulanchor.pt."}
               </div>
             </form>
           </Reveal>

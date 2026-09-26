@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { getProduct, type ProductSummary } from "@/lib/catalogue";
 import { useBasket } from "../BasketProvider";
+import { sendQuoteRequest } from "@/app/actions";
 
 const CONTACT_EMAIL = "sales@powerfulanchor.pt";
 
@@ -15,6 +16,8 @@ export default function QuoteForm({
 }) {
   const { items, clear } = useBasket();
   const [ok, setOk] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [sending, setSending] = useState(false);
   const [invalid, setInvalid] = useState<{ nome: boolean; email: boolean }>({
     nome: false,
     email: false,
@@ -22,7 +25,7 @@ export default function QuoteForm({
 
   const prodLabel = product ? `${product.name} (Ref. ${product.ref})` : "";
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const get = (n: string) =>
@@ -61,9 +64,39 @@ export default function QuoteForm({
       }${contact}`;
     }
 
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
+    // 1) Tenta gravar o pedido no ERP; 2) se não for possível, abre o cliente de e-mail.
+    const itens =
+      mode === "basket"
+        ? items.flatMap((b) => {
+            const p = getProduct(b.id);
+            return p ? [{ ref: p.ref, qty: b.qty }] : [];
+          })
+        : product
+          ? [{ ref: product.ref, qty: Math.max(1, Number(get("qtd")) || 1) }]
+          : [];
+    setSending(true);
+    let gravado = false;
+    try {
+      const res = await sendQuoteRequest({
+        nome,
+        email,
+        empresa: get("empresa") || undefined,
+        telefone: get("telefone") || undefined,
+        mensagem: get("mensagem") || undefined,
+        website: get("website"),
+        itens,
+      });
+      gravado = res.saved;
+    } catch {
+      gravado = false;
+    }
+    setSending(false);
+    if (!gravado) {
+      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+        subject
+      )}&body=${encodeURIComponent(body)}`;
+    }
+    setSaved(gravado);
     setOk(true);
     if (mode === "basket") clear();
   }
@@ -143,13 +176,27 @@ export default function QuoteForm({
         <textarea name="mensagem" placeholder="Detalhes, prazos ou outras questões…" />
       </div>
 
-      <button type="submit" className="btn-primary">
-        Enviar pedido de orçamento →
+      <input
+        name="website"
+        type="text"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+      />
+
+      <button type="submit" className="btn-primary" disabled={sending}>
+        {sending ? "A enviar…" : "Enviar pedido de orçamento →"}
       </button>
 
       <div className={`qok${ok ? " show" : ""}`}>
-        Preparámos um e-mail para <b>{CONTACT_EMAIL}</b> com o seu pedido. No site real, isto grava
-        o lead automaticamente e notifica a equipa.
+        {saved ? (
+          <>Pedido recebido! A nossa equipa entrará em contacto consigo brevemente.</>
+        ) : (
+          <>
+            Preparámos um e-mail para <b>{CONTACT_EMAIL}</b> com o seu pedido.
+          </>
+        )}
       </div>
     </form>
   );
