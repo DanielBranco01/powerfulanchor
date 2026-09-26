@@ -83,7 +83,7 @@ export default function QuoteForm({
         empresa: get("empresa") || undefined,
         telefone: get("telefone") || undefined,
         mensagem: get("mensagem") || undefined,
-        website: get("pa_extra_7f3"),
+        website: (form.elements.namedItem("pa_extra_7f3") as HTMLInputElement | null)?.checked ? "1" : "",
         itens,
       });
       gravado = res.saved;
@@ -178,7 +178,8 @@ export default function QuoteForm({
 
       <input
         name="pa_extra_7f3"
-        type="text"
+        type="checkbox"
+        value="1"
         tabIndex={-1}
         autoComplete="off"
         aria-hidden="true"

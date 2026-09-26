@@ -103,7 +103,8 @@ export default function Contact() {
               </div>
               <input
                 name="pa_extra_7f3"
-                type="text"
+                type="checkbox"
+                value="1"
                 tabIndex={-1}
                 autoComplete="off"
                 aria-hidden="true"
