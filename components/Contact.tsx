@@ -81,6 +81,7 @@ export default function Contact() {
                     name="nome"
                     type="text"
                     placeholder="O seu nome"
+                    defaultValue={state.values?.nome}
                     required
                     className={state.errors.nome ? "invalid" : ""}
                   />
@@ -93,6 +94,7 @@ export default function Contact() {
                     name="email"
                     type="email"
                     placeholder="email@empresa.pt"
+                    defaultValue={state.values?.email}
                     required
                     className={state.errors.email ? "invalid" : ""}
                   />
@@ -100,16 +102,19 @@ export default function Contact() {
                 </div>
               </div>
               <input
-                name="website"
+                name="pa_extra_7f3"
                 type="text"
                 tabIndex={-1}
                 autoComplete="off"
                 aria-hidden="true"
+                data-lpignore="true"
+                data-1p-ignore="true"
+                data-bwignore="true"
                 style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
               />
               <div className="field">
                 <label htmlFor="assunto">Assunto</label>
-                <input id="assunto" name="assunto" type="text" placeholder="Como podemos ajudar?" />
+                <input id="assunto" name="assunto" type="text" placeholder="Como podemos ajudar?" defaultValue={state.values?.assunto} />
               </div>
               <div className="field">
                 <label htmlFor="mensagem">Mensagem</label>
@@ -117,11 +122,17 @@ export default function Contact() {
                   id="mensagem"
                   name="mensagem"
                   placeholder="Descreva a sua necessidade ou projeto…"
+                  defaultValue={state.values?.mensagem}
                   required
                   className={state.errors.mensagem ? "invalid" : ""}
                 />
                 {state.errors.mensagem && <p className="field-error">{state.errors.mensagem}</p>}
               </div>
+              {state.form && (
+                <p className="field-error" role="alert">
+                  {state.form}
+                </p>
+              )}
               <button type="submit" className="btn btn-primary" disabled={pending}>
                 {pending ? "A enviar…" : "Enviar mensagem"} <span className="arrow">→</span>
               </button>

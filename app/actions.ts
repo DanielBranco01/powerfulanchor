@@ -15,6 +15,10 @@ export type ContactState = {
   errors: Partial<Record<"nome" | "email" | "mensagem", string>>;
   /** true quando o pedido ficou gravado no ERP (não é preciso abrir o e-mail). */
   saved?: boolean;
+  /** Erro geral (não associado a um campo). */
+  form?: string;
+  /** Valores submetidos, para não perder o que o utilizador escreveu. */
+  values?: { nome: string; email: string; assunto: string; mensagem: string };
   mailtoUrl?: string;
 };
 
@@ -25,9 +29,17 @@ export async function sendContactMessage(
   formData: FormData
 ): Promise<ContactState> {
   // Campo-armadilha para bots: os humanos não o veem nem preenchem.
-  if (String(formData.get("website") ?? "").trim() !== "") {
+  if (String(formData.get("pa_extra_7f3") ?? "").trim() !== "") {
+    console.warn("[contacto] campo-armadilha preenchido; pedido ignorado.");
     return { success: true, errors: {}, saved: true };
   }
+
+  const values = {
+    nome: String(formData.get("nome") ?? ""),
+    email: String(formData.get("email") ?? ""),
+    assunto: String(formData.get("assunto") ?? ""),
+    mensagem: String(formData.get("mensagem") ?? ""),
+  };
 
   const result = contactSchema.safeParse({
     nome: formData.get("nome"),
@@ -38,13 +50,17 @@ export async function sendContactMessage(
 
   if (!result.success) {
     const fieldErrors = result.error.flatten().fieldErrors;
+    const errors = {
+      nome: fieldErrors.nome?.[0],
+      email: fieldErrors.email?.[0],
+      mensagem: fieldErrors.mensagem?.[0],
+    };
+    const semCampo = !errors.nome && !errors.email && !errors.mensagem;
     return {
       success: false,
-      errors: {
-        nome: fieldErrors.nome?.[0],
-        email: fieldErrors.email?.[0],
-        mensagem: fieldErrors.mensagem?.[0],
-      },
+      errors,
+      values,
+      form: semCampo ? "Não foi possível validar o pedido. Verifique os dados e tente novamente." : undefined,
     };
   }
 

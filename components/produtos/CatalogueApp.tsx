@@ -20,13 +20,15 @@ import "../../app/produtos/produtos.css";
 
 const isCategory = (key: string) => CATEGORIES.some((c) => c.key === key);
 
-function replaceUrl(view: CatalogueView, cat?: string, id?: string) {
+function replaceUrl(view: CatalogueView, cat?: string, id?: string, sub?: string) {
   if (typeof window === "undefined") return;
   let url = "/produtos";
   if (view === "detail" && id) url = `/produtos?produto=${encodeURIComponent(id)}`;
   else if (view === "subcats" && cat) url = `/produtos?cat=${encodeURIComponent(cat)}`;
-  else if (view === "catalog")
+  else if (view === "catalog") {
     url = `/produtos?cat=${encodeURIComponent(cat ?? "all")}&view=catalog`;
+    if (sub && sub !== "all") url += `&sub=${encodeURIComponent(sub)}`;
+  }
   window.history.replaceState({}, "", url);
 }
 
@@ -70,9 +72,10 @@ export default function CatalogueApp() {
 
   const enterSubcat = useCallback(
     (subcat: string) => {
-      setFiltersState((prev) => ({ ...prev, subcat: subcat || "all" }));
+      const nextSubcat = subcat || "all";
+      setFiltersState((prev) => ({ ...prev, subcat: nextSubcat }));
       setView("catalog");
-      replaceUrl("catalog", filters.cat);
+      replaceUrl("catalog", filters.cat, undefined, nextSubcat);
       scrollTop();
     },
     [filters.cat]
@@ -88,7 +91,7 @@ export default function CatalogueApp() {
   const goBack = useCallback(() => {
     if (view === "detail") {
       setView("catalog");
-      replaceUrl("catalog", filters.cat);
+      replaceUrl("catalog", filters.cat, undefined, filters.subcat);
     } else if (view === "catalog" && filters.cat !== "all") {
       setView("subcats");
       replaceUrl("subcats", filters.cat);
@@ -98,12 +101,19 @@ export default function CatalogueApp() {
       replaceUrl("cats");
     }
     scrollTop();
-  }, [view, filters.cat]);
+  }, [view, filters.cat, filters.subcat]);
 
-  const setFilters = useCallback((patch: Partial<Filters>) => {
-    if (patch.cat !== undefined) replaceUrl("catalog", patch.cat);
-    setFiltersState((prev) => ({ ...prev, ...patch }));
-  }, []);
+  const setFilters = useCallback(
+    (patch: Partial<Filters>) => {
+      if (patch.cat !== undefined || patch.subcat !== undefined) {
+        const nextCat = patch.cat ?? filters.cat;
+        const nextSubcat = patch.subcat ?? filters.subcat;
+        replaceUrl("catalog", nextCat, undefined, nextSubcat);
+      }
+      setFiltersState((prev) => ({ ...prev, ...patch }));
+    },
+    [filters.cat, filters.subcat]
+  );
 
   // Sync from the URL — on first mount AND whenever it changes via a real
   // Next.js navigation (e.g. a <Link> in the nav mega menu), even though the

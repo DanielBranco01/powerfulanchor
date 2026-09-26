@@ -83,7 +83,7 @@ export default function QuoteForm({
         empresa: get("empresa") || undefined,
         telefone: get("telefone") || undefined,
         mensagem: get("mensagem") || undefined,
-        website: get("website"),
+        website: get("pa_extra_7f3"),
         itens,
       });
       gravado = res.saved;
@@ -177,11 +177,14 @@ export default function QuoteForm({
       </div>
 
       <input
-        name="website"
+        name="pa_extra_7f3"
         type="text"
         tabIndex={-1}
         autoComplete="off"
         aria-hidden="true"
+        data-lpignore="true"
+        data-1p-ignore="true"
+        data-bwignore="true"
         style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
       />
 

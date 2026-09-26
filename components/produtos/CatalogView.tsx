@@ -1,15 +1,23 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { CATEGORIES, PRODUCTS } from "@/lib/catalogue";
-import { useCatalogue } from "./context";
+import { DEFAULT_FILTERS, useCatalogue } from "./context";
 import ProductCard from "./ProductCard";
 
 const BRANDS = ["Digitus", "HellermannTyton", "RFS", "Brady", "Roxtec"];
 
 export default function CatalogView() {
   const { filters, setFilters, showCats } = useCatalogue();
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const meta = CATEGORIES.find((c) => c.key === filters.cat);
+
+  const activeFilterCount = [
+    filters.cat !== "all",
+    filters.subcat !== "all",
+    filters.brand !== "all",
+    filters.stock !== "all",
+  ].filter(Boolean).length;
 
   const subcats = useMemo(() => {
     if (filters.cat === "all") return [];
@@ -78,84 +86,134 @@ export default function CatalogView() {
 
       <section className="catalog-body">
         <div className="wrap catalog-layout">
-          <aside className="sidebar">
-            <div className="sidebar-group">
-              <span className="fgroup-label">Categoria</span>
-              <div className="sidebar-chips">
-                <button
-                  className={`chip${filters.cat === "all" ? " active" : ""}`}
-                  onClick={() => setFilters({ cat: "all", subcat: "all" })}
+          <div
+            className={`filter-backdrop${filtersOpen ? " show" : ""}`}
+            onClick={() => setFiltersOpen(false)}
+          />
+          <aside className={`sidebar${filtersOpen ? " show" : ""}`}>
+            <div className="sidebar-head">
+              <h3>
+                Filtros
+                {activeFilterCount > 0 && <span className="fcount">{activeFilterCount}</span>}
+              </h3>
+              <button
+                className="x"
+                onClick={() => setFiltersOpen(false)}
+                aria-label="Fechar filtros"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  Todas
-                </button>
-                {CATEGORIES.map((c) => (
-                  <button
-                    key={c.key}
-                    className={`chip${filters.cat === c.key ? " active" : ""}`}
-                    onClick={() => setFilters({ cat: c.key, subcat: "all" })}
-                  >
-                    {c.key}
-                  </button>
-                ))}
-              </div>
+                  <path d="M18 6 6 18M6 6l12 12" />
+                </svg>
+              </button>
             </div>
 
-            {subcats.length > 0 && (
+            <div className="sidebar-scroll">
               <div className="sidebar-group">
-                <span className="fgroup-label">Tipo</span>
+                <span className="fgroup-label">Categoria</span>
                 <div className="sidebar-chips">
                   <button
-                    className={`chip${filters.subcat === "all" ? " active" : ""}`}
-                    onClick={() => setFilters({ subcat: "all" })}
+                    className={`chip${filters.cat === "all" ? " active" : ""}`}
+                    onClick={() => setFilters({ cat: "all", subcat: "all" })}
                   >
                     Todas
                   </button>
-                  {subcats.map((s) => (
+                  {CATEGORIES.map((c) => (
                     <button
-                      key={s}
-                      className={`chip${filters.subcat === s ? " active" : ""}`}
-                      onClick={() => setFilters({ subcat: s })}
+                      key={c.key}
+                      className={`chip${filters.cat === c.key ? " active" : ""}`}
+                      onClick={() => setFilters({ cat: c.key, subcat: "all" })}
                     >
-                      {s}
+                      {c.key}
                     </button>
                   ))}
                 </div>
               </div>
-            )}
 
-            <div className="sidebar-group">
-              <span className="fgroup-label">Marca</span>
-              <div className="sidebar-chips">
-                <button
-                  className={`chip${filters.brand === "all" ? " active" : ""}`}
-                  onClick={() => setFilters({ brand: "all" })}
-                >
-                  Todas
-                </button>
-                {BRANDS.map((b) => (
+              {subcats.length > 0 && (
+                <div className="sidebar-group">
+                  <span className="fgroup-label">Tipo</span>
+                  <div className="sidebar-chips">
+                    <button
+                      className={`chip${filters.subcat === "all" ? " active" : ""}`}
+                      onClick={() => setFilters({ subcat: "all" })}
+                    >
+                      Todas
+                    </button>
+                    {subcats.map((s) => (
+                      <button
+                        key={s}
+                        className={`chip${filters.subcat === s ? " active" : ""}`}
+                        onClick={() => setFilters({ subcat: s })}
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="sidebar-group">
+                <span className="fgroup-label">Marca</span>
+                <div className="sidebar-chips">
                   <button
-                    key={b}
-                    className={`chip${filters.brand === b ? " active" : ""}`}
-                    onClick={() => setFilters({ brand: b })}
+                    className={`chip${filters.brand === "all" ? " active" : ""}`}
+                    onClick={() => setFilters({ brand: "all" })}
                   >
-                    {b}
+                    Todas
                   </button>
-                ))}
+                  {BRANDS.map((b) => (
+                    <button
+                      key={b}
+                      className={`chip${filters.brand === b ? " active" : ""}`}
+                      onClick={() => setFilters({ brand: b })}
+                    >
+                      {b}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="sidebar-group">
+                <span className="fgroup-label">Disponibilidade</span>
+                <select
+                  className="sort"
+                  value={filters.stock}
+                  onChange={(e) => setFilters({ stock: e.target.value })}
+                >
+                  <option value="all">Todas</option>
+                  <option value="in">Em stock</option>
+                  <option value="low">Stock reduzido</option>
+                  <option value="order">Sob encomenda</option>
+                </select>
               </div>
             </div>
 
-            <div className="sidebar-group">
-              <span className="fgroup-label">Disponibilidade</span>
-              <select
-                className="sort"
-                value={filters.stock}
-                onChange={(e) => setFilters({ stock: e.target.value })}
+            <div className="sidebar-foot">
+              <button
+                className="clear"
+                onClick={() =>
+                  setFilters({
+                    cat: DEFAULT_FILTERS.cat,
+                    subcat: DEFAULT_FILTERS.subcat,
+                    brand: DEFAULT_FILTERS.brand,
+                    stock: DEFAULT_FILTERS.stock,
+                  })
+                }
               >
-                <option value="all">Todas</option>
-                <option value="in">Em stock</option>
-                <option value="low">Stock reduzido</option>
-                <option value="order">Sob encomenda</option>
-              </select>
+                Limpar filtros
+              </button>
+              <button className="btn-primary" onClick={() => setFiltersOpen(false)}>
+                Ver {list.length} produto{list.length === 1 ? "" : "s"}
+              </button>
             </div>
           </aside>
 
@@ -164,6 +222,22 @@ export default function CatalogView() {
               <span className="count">
                 <b>{list.length}</b> produto{list.length === 1 ? "" : "s"}
               </span>
+              <button className="filters-trigger" onClick={() => setFiltersOpen(true)}>
+                <svg
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M4 6h16M7 12h10M10 18h4" />
+                </svg>
+                Filtros
+                {activeFilterCount > 0 && <span className="fcount">{activeFilterCount}</span>}
+              </button>
               <select
                 className="sort"
                 value={filters.sort}

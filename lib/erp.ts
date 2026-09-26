@@ -18,7 +18,10 @@ export type ErpLead = {
 };
 
 export async function criarLeadNoErp(lead: ErpLead): Promise<boolean> {
-  if (!URL || !KEY) return false;
+  if (!URL || !KEY) {
+    console.error("[erp] ERP_SUPABASE_URL / ERP_SUPABASE_PUBLISHABLE_KEY em falta no ambiente.");
+    return false;
+  }
   try {
     const res = await fetch(`${URL}/rest/v1/rpc/site_criar_lead`, {
       method: "POST",
@@ -40,8 +43,10 @@ export async function criarLeadNoErp(lead: ErpLead): Promise<boolean> {
       signal: AbortSignal.timeout(8000),
       cache: "no-store",
     });
+    if (!res.ok) console.error("[erp] site_criar_lead recusado, estado HTTP", res.status);
     return res.ok;
-  } catch {
+  } catch (e) {
+    console.error("[erp] site_criar_lead falhou:", e instanceof Error ? e.name : "erro");
     return false;
   }
 }
