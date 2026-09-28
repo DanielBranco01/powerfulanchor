@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { criarLeadNoErp } from "@/lib/erp";
+import { notificarNovoLead } from "@/lib/notify";
 
 const contactSchema = z.object({
   nome: z.string().trim().min(1, "Indique o seu nome."),
@@ -67,7 +68,10 @@ export async function sendContactMessage(
   const { nome, email, assunto, mensagem } = result.data;
 
   const saved = await criarLeadNoErp({ nome, email, assunto, mensagem, origem: "site-contacto" });
-  if (saved) return { success: true, errors: {}, saved: true };
+  if (saved) {
+    await notificarNovoLead({ nome, email, assunto, mensagem, origem: "site-contacto" }); // nunca lança
+    return { success: true, errors: {}, saved: true };
+  }
 
   const subject = encodeURIComponent(assunto || "Contacto via website");
   const body = encodeURIComponent(`Nome: ${nome}\nE-mail: ${email}\n\n${mensagem}`);
@@ -104,5 +108,17 @@ export async function sendQuoteRequest(input: z.input<typeof quoteSchema>): Prom
     itens: q.itens,
     origem: "site-orcamento",
   });
+  if (saved) {
+    await notificarNovoLead({
+      nome: q.nome,
+      email: q.email,
+      empresa: q.empresa,
+      telefone: q.telefone,
+      mensagem: q.mensagem,
+      assunto: "Pedido de orçamento",
+      itens: q.itens,
+      origem: "site-orcamento",
+    });
+  }
   return { saved };
 }
